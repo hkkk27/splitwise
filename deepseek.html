@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GroupFood - Collaborative Ordering</title>
+    <title>FoodGroup - Collaborative Ordering</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
@@ -11,122 +11,177 @@
             --primary-color: #2c3e50;
             --secondary-color: #27ae60;
             --accent-color: #e67e22;
+            --text-color: #333;
+            --bg-color: #f8f9fa;
         }
 
-        /* Add Google Sign-In styling */
-        #g_id_onload {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        #userProfile {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            display: none;
-            align-items: center;
-            gap: 15px;
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        /* Navigation Bar */
+        .navbar {
             background: white;
-            padding: 15px;
-            border-radius: 10px;
+            padding: 1rem 2rem;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        #userProfile img {
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
         }
 
-        /* Rest of your existing CSS */
-        .header {
+        .auth-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        /* Login Button */
+        .login-btn {
+            background: none;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .login-btn:hover {
             background: var(--primary-color);
             color: white;
-            padding: 1rem;
+        }
+
+        /* User Avatar */
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid var(--secondary-color);
+        }
+
+        /* Hero Section */
+        .hero {
             text-align: center;
-            position: relative;
+            padding: 4rem 2rem;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
         }
 
-        .container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            padding: 1rem;
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
         }
 
+        /* Restaurant Grid */
         .restaurant-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
         .restaurant-card {
             background: white;
-            border-radius: 10px;
-            padding: 1.5rem;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
             cursor: pointer;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .restaurant-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .restaurant-image {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .restaurant-info {
+            padding: 1.5rem;
+        }
+
+        /* Google Sign-In Overrides */
+        #g_id_onload {
+            position: absolute;
+            right: 20px;
+            top: 70px;
+            z-index: 1000;
+        }
+
+        .g_id_signin {
+            border: none!important;
+            background: none!important;
         }
     </style>
 </head>
 <body>
-    <!-- Google Sign-In Integration -->
-    <div id="g_id_onload"
-        data-client_id="192951589983-hu6pc6g1jabappef3d70o7rm27huhej6.apps.googleusercontent.com"
-        data-login_uri="http://localhost" 
-        data-auto_prompt="false"
-        data-callback="handleCredentialResponse">
-    </div>
-
-    <!-- User Profile Section -->
-    <div id="userProfile">
-        <img id="userAvatar">
-        <div>
-            <h3 id="displayName"></h3>
-            <p id="userEmail"></p>
-            <button onclick="googleLogout()">Logout</button>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="logo">FoodGroup</div>
+        <div class="auth-section">
+            <div id="g_id_onload"
+                data-client_id="192951589983-hu6pc6g1jabappef3d70o7rm27huhej6.apps.googleusercontent.com"
+                data-login_uri="https://hkkk27.github.io/splitwise/"
+                data-auto_prompt="false"
+                data-callback="handleCredentialResponse">
+            </div>
+            <img src="default-avatar.jpg" class="user-avatar" id="userAvatar" style="display: none;">
+            <button class="login-btn" id="loginBtn">Sign In</button>
         </div>
-    </div>
+    </nav>
 
-    <header class="header">
-        <h1>GroupFood 🍱</h1>
-        <p>Collaborative Food Ordering System</p>
-    </header>
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Group Ordering Made Simple</h1>
+        <p>Save on delivery fees and enjoy meals together</p>
+    </section>
 
-    <div class="container" id="mainContainer" style="display: none;">
-        <!-- Your existing container content -->
-    </div>
-
-    <div id="restaurantSelection" class="container" style="display: none;">
-        <div class="restaurant-grid">
-            <div class="restaurant-card" onclick="startSession('mcdonalds')">
+    <!-- Restaurant Selection -->
+    <div class="restaurant-grid" id="restaurantGrid">
+        <div class="restaurant-card" data-restaurant="mcdonalds">
+            <div class="restaurant-image" style="background-image: url('mcdonalds-bg.jpg')"></div>
+            <div class="restaurant-info">
                 <h3>McDonald's</h3>
-                <p>Active orders: <span>0</span></p>
+                <p>Active Groups: 5</p>
             </div>
-            <div class="restaurant-card" onclick="startSession('pizzahut')">
-                <h3>Pizza Hut</h3>
-                <p>Active orders: <span>0</span></p>
-            </div>
-            <!-- Add other restaurants -->
         </div>
+        <!-- Add more restaurant cards -->
     </div>
 
     <script>
-        // Google Sign-In Functions
-        function handleCredentialResponse(response) {
-            const responsePayload = parseJwt(response.credential);
-            
-            localStorage.setItem('user', JSON.stringify({
-                name: responsePayload.name,
-                email: responsePayload.email,
-                picture: responsePayload.picture
-            }));
+        // Authentication Management
+        let currentUser = null;
 
-            showUserProfile(responsePayload);
-            showRestaurantSelection();
+        function handleCredentialResponse(response) {
+            const userData = parseJwt(response.credential);
+            currentUser = {
+                name: userData.name,
+                email: userData.email,
+                picture: userData.picture
+            };
+            
+            localStorage.setItem('user', JSON.stringify(currentUser));
+            updateAuthUI();
         }
 
         function parseJwt(token) {
@@ -135,43 +190,55 @@
             return JSON.parse(atob(base64));
         }
 
-        function showUserProfile(user) {
-            document.getElementById('userProfile').style.display = 'flex';
-            document.getElementById('userAvatar').src = user.picture;
-            document.getElementById('displayName').textContent = user.name;
-            document.getElementById('userEmail').textContent = user.email;
-            document.getElementById('g_id_onload').style.display = 'none';
-        }
-
-        function googleLogout() {
-            localStorage.removeItem('user');
-            document.getElementById('userProfile').style.display = 'none';
-            document.getElementById('g_id_onload').style.display = 'block';
-            document.getElementById('restaurantSelection').style.display = 'none';
-            google.accounts.id.revoke(localStorage.email, done => {
-                console.log('Logged out successfully');
-            });
-        }
-
-        // Show restaurant selection after login
-        function showRestaurantSelection() {
-            document.getElementById('restaurantSelection').style.display = 'block';
-        }
-
-        // Check existing session on page load
-        window.onload = function() {
-            const user = JSON.parse(localStorage.getItem('user'));
-            if(user) {
-                showUserProfile(user);
-                showRestaurantSelection();
+        function updateAuthUI() {
+            if(currentUser) {
+                document.getElementById('userAvatar').style.display = 'block';
+                document.getElementById('userAvatar').src = currentUser.picture;
+                document.getElementById('loginBtn').style.display = 'none';
+            } else {
+                document.getElementById('userAvatar').style.display = 'none';
+                document.getElementById('loginBtn').style.display = 'block';
             }
         }
 
-        // Your existing restaurant session functions
-        function startSession(restaurant) {
-            document.getElementById('restaurantSelection').style.display = 'none';
-            document.getElementById('mainContainer').style.display = 'grid';
-            // Start your session logic here
+        // Logout Functionality
+        document.getElementById('userAvatar').addEventListener('click', () => {
+            if(confirm('Are you sure you want to logout?')) {
+                googleLogout();
+            }
+        });
+
+        function googleLogout() {
+            localStorage.removeItem('user');
+            currentUser = null;
+            updateAuthUI();
+            google.accounts.id.revoke();
+            window.location.reload();
+        }
+
+        // Initialize
+        window.onload = () => {
+            const savedUser = localStorage.getItem('user');
+            if(savedUser) {
+                currentUser = JSON.parse(savedUser);
+                updateAuthUI();
+            }
+        };
+
+        // Restaurant Selection
+        document.querySelectorAll('.restaurant-card').forEach(card => {
+            card.addEventListener('click', () => {
+                if(!currentUser) {
+                    alert('Please login to start an order!');
+                    return;
+                }
+                startOrderSession(card.dataset.restaurant);
+            });
+        });
+
+        function startOrderSession(restaurant) {
+            // Add your order session logic here
+            console.log(`Starting order session for ${restaurant}`);
         }
     </script>
 </body>
